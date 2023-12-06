@@ -1,4 +1,3 @@
-import re
 from math import ceil, floor
 
 with open("read.txt", 'r') as file:
