@@ -37,22 +37,27 @@ class Hand:
 
     def handType(self):
         s = list(set(self.hand))
+        if len(s) == 1:
+            return 7
         sym = ""
         curr = 0
         for i in s:
-            if self.hand.count(i) > curr:
+            if i != "J" and self.hand.count(i) > curr:
                 curr = self.hand.count(i)
                 sym = i
+        print(sym)
         tmpHand = self.hand.replace("J", sym)
-        s = list(set(tmpHand))
+        print(tmpHand)
         if len(s) == 5:
             return 1
+        s = list(set(tmpHand))
         if len(s) == 4:
             return 2
         if len(s) == 3:
-            return 4 if 3 in (self.hand.count(s[0]), self.hand.count(s[1]), self.hand.count(s[2])) else 3
+            return 4 if 3 in (tmpHand.count(s[0]), tmpHand.count(s[1]), tmpHand.count(s[2])) else 3
         if len(s) == 2:
-            return 6 if self.hand.count(s[0]) in (1, 4) else 5
+            print(tmpHand.count(s[0]))
+            return 6 if tmpHand.count(s[0]) in (1, 4) else 5
         if len(s) == 1:
             return 7
 
@@ -126,5 +131,7 @@ bst = BST()
 for i in range(int(input())):
     hand, bid = input().split()
     hand, bid = Hand(hand), int(bid)
+    print(f"---------------------------------------------{hand}---------------------------------------------")
     bst.addNode(Node(hand, bid))
+# print(bst)
 print(bst.totalWinnings())

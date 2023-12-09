@@ -112,11 +112,17 @@ class BST:
             return self.top.totalWinnings()
 
     def totalWinnings(self):
-        def helper(root):
-            if not root:
-                return []
-            return helper(root.left) + [root.bid] + helper(root.right)
-        return sum((idx + 1) * value for idx, value in enumerate(helper(self.top)))
+        t = [0]
+        def inorder_traversal(node, count, r):
+            if node is not None:
+                count = inorder_traversal(node.left, count, r)
+                count += 1
+                r[0] += count * node.bid
+                count = inorder_traversal(node.right, count, r)
+            return count
+        inorder_traversal(self.top, 0, t)
+        return t[0]
+
 
     def __repr__(self) -> str:
         return f"{self.top}"
