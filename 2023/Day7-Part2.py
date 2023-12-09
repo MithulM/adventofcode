@@ -89,18 +89,6 @@ class Node:
             s += f"\n{indent}Left: {self.left.__repr__(depth + 1)}"
         return s
 
-    def totalWinnings(self, seen=1):
-        if self.left == None and self.right == None:
-            return (seen, seen * self.bid)
-        if self.left == None:
-            rightSeen, rightWinnings = self.right.totalWinnings(seen + 1)
-            return (rightSeen, seen * self.bid + rightWinnings)
-        leftSeen, leftWinnings = self.left.totalWinnings(seen)
-        if self.right == None:
-            return (leftSeen + 1, leftWinnings + (leftSeen) * self.bid)
-        rightSeen, rightWinnings = self.right.totalWinnings(leftSeen + 2)
-        return (rightSeen + 1, leftWinnings + (leftSeen + 1) * self.bid + rightWinnings)
-
 class BST:
     def __init__(self) -> None:
         self.top: Node = None
@@ -111,18 +99,18 @@ class BST:
         else:
             self.top.addNode(node)
 
-    def totalWinnings2(self):
-        if self.top == None:
-            return(0, 0)
-        else:
-            return self.top.totalWinnings()
-
     def totalWinnings(self):
-        def helper(root):
-            if not root:
-                return []
-            return helper(root.left) + [root.bid] + helper(root.right)
-        return sum((idx + 1) * value for idx, value in enumerate(helper(self.top)))
+        t = [0]
+        def inorder_traversal(node, count, r):
+            if node is not None:
+                count = inorder_traversal(node.left, count, r)
+                count += 1
+                print(f"{node.hand} {count} * {node.bid} = {count * node.bid}")
+                r[0] += count * node.bid
+                count = inorder_traversal(node.right, count, r)
+            return count
+        inorder_traversal(self.top, 0, t)
+        return t[0]
 
     def __repr__(self) -> str:
         return f"{self.top}"
@@ -133,5 +121,4 @@ for i in range(int(input())):
     hand, bid = Hand(hand), int(bid)
     print(f"---------------------------------------------{hand}---------------------------------------------")
     bst.addNode(Node(hand, bid))
-# print(bst)
 print(bst.totalWinnings())

@@ -4,7 +4,6 @@ class Hand:
         self.handType: int = self.handType()
 
     def __gt__(self, other):
-        # print(self, other)
         if self.hand == other.hand:
             return False
         if self.handType != other.handType:
@@ -58,13 +57,11 @@ class Node:
 
     def addNode(self, other):
         if other.hand > self.hand:
-            # print("Move right")
             if self.right == None:
                 self.right = other
             else:
                 self.right.addNode(other)
         else:
-            # print("Move left")
             if self.left == None:
                 self.left = other
             else:
@@ -79,22 +76,6 @@ class Node:
             s += f"\n{indent}Left: {self.left.__repr__(depth + 1)}"
         return s
 
-    def totalWinnings(self, seen=1):
-        if self.left == None and self.right == None:
-            # print(f"{seen} * {self.bid}", self.hand, 1)
-            return (seen, seen * self.bid)
-        if self.left == None:
-            rightSeen, rightWinnings = self.right.totalWinnings(seen + 1)
-            # print(f"{seen} * {self.bid}", self.hand, 2)
-            return (rightSeen, seen * self.bid + rightWinnings)
-        leftSeen, leftWinnings = self.left.totalWinnings(seen)
-        if self.right == None:
-            # print(f"{leftSeen} * {self.bid}", self.hand, 3)
-            return (leftSeen + 1, leftWinnings + (leftSeen) * self.bid)
-        rightSeen, rightWinnings = self.right.totalWinnings(leftSeen + 2)
-        # print(f"{leftSeen + 1} * {self.bid}", self.hand, 4)
-        return (rightSeen + 1, leftWinnings + (leftSeen + 1) * self.bid + rightWinnings)
-
 class BST:
     def __init__(self) -> None:
         self.top: Node = None
@@ -104,12 +85,6 @@ class BST:
             self.top = node
         else:
             self.top.addNode(node)
-
-    def totalWinnings2(self):
-        if self.top == None:
-            return(0, 0)
-        else:
-            return self.top.totalWinnings()
 
     def totalWinnings(self):
         t = [0]
@@ -123,7 +98,6 @@ class BST:
         inorder_traversal(self.top, 0, t)
         return t[0]
 
-
     def __repr__(self) -> str:
         return f"{self.top}"
 
@@ -131,7 +105,5 @@ bst = BST()
 for i in range(int(input())):
     hand, bid = input().split()
     hand, bid = Hand(hand), int(bid)
-    # print(f"---------------------------------------------{hand}---------------------------------------------")
     bst.addNode(Node(hand, bid))
-# print(bst)
 print(bst.totalWinnings())
