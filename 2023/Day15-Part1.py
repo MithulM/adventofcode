@@ -1,0 +1,1 @@
+print(sum(sum((ord(i) * 17) % 256 for i in word) for word in input().split(",")))
